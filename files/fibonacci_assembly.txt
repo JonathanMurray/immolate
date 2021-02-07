@@ -1,12 +1,14 @@
-PRINT r0             # Print fib(0)
-PUT r0 <- 1          # Prepare fib(1)
-PRINT r0             # Print fib(1)
-PUT r2 <- 5          # Limit the number of loops
-ADD r1 <- r0 r1      # Compute fib(n)
-PRINT r1             # Print fib(n)
-ADD r0 <- r0 r1      # Compute fib(n+1)
-PRINT r0             # Print fib(n+1)
-ADD_NUM r3 <- r3 1   # Increment loop counter
-JUMP_EQ 11 <- r2 r3  # Exit if we've run enough loops
-JUMP 4               # Otherwise run the loop again
-EXIT 0               # Exit
+  PRINT r0               # Print fib(0)
+  PUT r0 <- 1            # Prepare fib(1)
+  PRINT r0               # Print fib(1)
+  PUT r2 <- 5            # Limit the number of loops
+LOOP:
+  ADD r1 <- r0 r1        # Compute fib(n)
+  PRINT r1               # Print fib(n)
+  ADD r0 <- r0 r1        # Compute fib(n+1)
+  PRINT r0               # Print fib(n+1)
+  ADD_NUM r3 <- r3 1     # Increment loop counter
+  JUMP_EQ EXIT <- r2 r3  # Exit if we've run enough loops
+  JUMP LOOP              # Otherwise run the loop again
+EXIT:
+  EXIT 0                 # Exit

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
-from immolate.assembler import load_program_from_assembly_file, save_program_to_assembly_file
-from immolate.encoding import save_program_to_file, load_program_from_file
+from immolate.assembler import save_program_to_assembly_file
+from immolate.encoding import load_program_from_file
 
 
 def assemble(executable_filename: str, assembly_filename: str):

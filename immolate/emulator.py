@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import List, Callable, Any
+from typing import List, Dict
 
 
 class Instruction(metaclass=ABCMeta):
@@ -19,7 +19,7 @@ class Instruction(metaclass=ABCMeta):
 
     @staticmethod
     @abstractmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         pass
 
     @staticmethod
@@ -82,7 +82,7 @@ class Put(Instruction):
         return bytes([self.value, self.register])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         register = _parse_register(tokens[1])
         _assert_arrow(tokens[2])
         value = int(tokens[3])
@@ -116,7 +116,7 @@ class Add(Instruction):
         return bytes([(self.register_a << 4) + (self.register_b << 2) + self.destination_register, 0])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         destination_register = _parse_register(tokens[1])
         _assert_arrow(tokens[2])
         register_a = _parse_register(tokens[3])
@@ -151,7 +151,7 @@ class AddRegisterAndNumber(Instruction):
         return bytes([self.number, (self.source_register << 2) + self.destination_register])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         destination_register = _parse_register(tokens[1])
         _assert_arrow(tokens[2])
         source_register = _parse_register(tokens[3])
@@ -183,8 +183,8 @@ class Jump(Instruction):
         return bytes([self.instruction_index, 0])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
-        instruction_index = int(tokens[1])
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        instruction_index = _parse_jump_destination(tokens[1], labels)
         return Jump(instruction_index)
 
     def __str__(self):
@@ -216,8 +216,8 @@ class JumpIfEqual(Instruction):
         return bytes([(self.register_a << 2) + self.register_b, self.instruction_index])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
-        instruction_index = int(tokens[1])
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        instruction_index = _parse_jump_destination(tokens[1], labels)
         _assert_arrow(tokens[2])
         register_a = _parse_register(tokens[3])
         register_b = _parse_register(tokens[4])
@@ -248,7 +248,7 @@ class Exit(Instruction):
         return bytes([self.exit_code, 0])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         exit_code = int(tokens[1])
         return Exit(exit_code)
 
@@ -276,7 +276,7 @@ class PrintRegister(Instruction):
         return bytes([self.register, 0])
 
     @staticmethod
-    def decode_assembly(tokens: List[str]):
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         register = _parse_register(tokens[1])
         return PrintRegister(register)
 
@@ -297,3 +297,14 @@ def _parse_register(token: str) -> int:
     if not token.startswith("r"):
         raise ValueError(f"Expected register token but got '{token}'")
     return int(token[1:])
+
+
+def _parse_jump_destination(destination: str, labels: Dict[str, int]):
+    try:
+        instruction_index = int(destination)
+    except ValueError:
+        if destination in labels:
+            instruction_index = labels[destination]
+        else:
+            raise ValueError(f"Unknown jump destination: {destination}")
+    return instruction_index
