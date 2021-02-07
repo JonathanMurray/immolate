@@ -9,7 +9,10 @@ from immolate.encoding import load_program_from_file
 def run_program_from_file(filename: str, program_args: List[int]):
     program = load_program_from_file(filename)
     cpu = Cpu(program, args=program_args, allow_sleeps=True)
-    cpu.run_until_exit()
+    try:
+        cpu.run_until_exit()
+    except Exception as e:
+        raise Exception(f"Program crashed: {e}") from e
     print(f"Program exited with code {cpu.exit_code}")
 
 

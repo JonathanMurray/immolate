@@ -33,7 +33,7 @@ def parse_instructions(lines: List[str], labels: Dict[str, Tuple[int, int]]):
             try:
                 instruction = parse_assembly_line(line.strip(), label_destinations)
             except Exception as e:
-                raise Exception(f"Invalid syntax at line {i}: '{line.strip()}'") from e
+                raise Exception(f"Invalid syntax at line {i} ('{line.strip()}'): {e}") from e
             program.append(instruction)
     return program
 
@@ -67,4 +67,4 @@ def parse_instruction_tokens(tokens: List[str], labels: Dict[str, int]) -> Instr
         cls = [cls for cls in INSTRUCTION_CLASSES if cls.assembly_name() == tokens[0]][0]
         return cls.decode_assembly(tokens, labels)
     except Exception as e:
-        raise ValueError(f"Failed to parse instruction from tokens {tokens}") from e
+        raise ValueError(f"Failed to parse instruction from tokens {tokens}: {e}") from e

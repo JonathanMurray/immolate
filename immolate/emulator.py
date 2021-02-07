@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from time import sleep
 from typing import List, Dict
 
+from immolate.screen import Screen
+
 
 class Instruction(metaclass=ABCMeta):
     @abstractmethod
@@ -45,23 +47,24 @@ class Cpu:
         self.exit_code = None
         self._debug = debug
         self._allow_sleeps = allow_sleeps
+        self._screen: Screen = None
 
     def do_output(self, output: int):
         print(str(output))
         self.output.append(str(output))
 
+    def run_until_exit(self):
+        while not self.has_exited:
+            self.run_one_cycle()
+
     def run_one_cycle(self):
         if self.instruction_pointer >= len(self._program):
-            raise Exception("CPU crashed - trying to read past the last instruction!")
+            raise Exception("Can't read past the last instruction!")
         instruction = self._program[self.instruction_pointer]
         self.instruction_pointer += 1
         if self._debug:
             print(f"Executing {instruction}")
         instruction.execute(self)
-
-    def run_until_exit(self):
-        while not self.has_exited:
-            self.run_one_cycle()
 
     def __str__(self):
         return f"Reg: {self.registers}, Instruction pointer: {self.instruction_pointer}"
@@ -69,6 +72,25 @@ class Cpu:
     def sleep(self, millis: int):
         if self._allow_sleeps:
             sleep(millis / 1000.0)
+
+    def activate_screen(self):
+        if self._screen:
+            raise Exception("Screen is already active!")
+        self._screen = Screen()
+        self._screen.activate()
+        self._screen.run_one_frame()
+
+    def refresh_screen(self):
+        self._assert_active_screen()
+        self._screen.run_one_frame()
+
+    def fill_screen(self, color: int):
+        self._assert_active_screen()
+        self._screen.color = color
+
+    def _assert_active_screen(self):
+        if not self._screen:
+            raise Exception("Screen has not been activated yet!")
 
 
 @dataclass
@@ -321,6 +343,84 @@ class Sleep(Instruction):
     @staticmethod
     def assembly_name() -> str:
         return "SLEEP"
+
+
+@dataclass
+class ActivateScreen(Instruction):
+
+    def execute(self, cpu: Cpu):
+        cpu.activate_screen()
+
+    @staticmethod
+    def decode(b: bytes):
+        return ActivateScreen()
+
+    def __bytes__(self) -> bytes:
+        return bytes(2)
+
+    @staticmethod
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        return ActivateScreen()
+
+    def __str__(self):
+        return f"{self.assembly_name()}"
+
+    @staticmethod
+    def assembly_name() -> str:
+        return "ACTIVATE_SCREEN"
+
+
+@dataclass
+class RefreshScreen(Instruction):
+
+    def execute(self, cpu: Cpu):
+        cpu.refresh_screen()
+
+    @staticmethod
+    def decode(b: bytes):
+        return RefreshScreen()
+
+    def __bytes__(self) -> bytes:
+        return bytes(2)
+
+    @staticmethod
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        return RefreshScreen()
+
+    def __str__(self):
+        return f"{self.assembly_name()}"
+
+    @staticmethod
+    def assembly_name() -> str:
+        return "REFRESH_SCREEN"
+
+
+@dataclass
+class FillScreen(Instruction):
+    color_register: int
+
+    def execute(self, cpu: Cpu):
+        cpu.fill_screen(cpu.registers[self.color_register])
+
+    @staticmethod
+    def decode(b: bytes):
+        color_register = int(b[0])
+        return FillScreen(color_register)
+
+    def __bytes__(self) -> bytes:
+        return bytes([self.color_register, 0])
+
+    @staticmethod
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        color_register = _parse_register(tokens[1])
+        return FillScreen(color_register)
+
+    def __str__(self):
+        return f"{self.assembly_name()} r{self.color_register}"
+
+    @staticmethod
+    def assembly_name() -> str:
+        return "FILL_SCREEN"
 
 
 def _assert_arrow(token: str):

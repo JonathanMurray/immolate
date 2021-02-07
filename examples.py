@@ -11,7 +11,10 @@ def run_example(name: str, program_args: List[int]):
     print(f"Running example program '{name}' ({len(program)} instructions long)")
     cpu = Cpu(program, args=program_args, allow_sleeps=True)
     print(cpu)
-    cpu.run_until_exit()
+    try:
+        cpu.run_until_exit()
+    except Exception as e:
+        raise Exception(f"Program crashed: {e}") from e
     print(cpu)
     print(f"Program exited with code {cpu.exit_code}")
 

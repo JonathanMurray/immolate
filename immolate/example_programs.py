@@ -1,6 +1,7 @@
 from typing import List, Dict
 
-from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction, Sleep
+from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction, \
+    Sleep, ActivateScreen, RefreshScreen, FillScreen
 
 FIBONACCI = [
     PrintRegister(0),  # Print fib(0)
@@ -38,8 +39,20 @@ ADD_TWO_ARGS = [
     Exit(0)
 ]
 
+GRAPHICS = [
+    ActivateScreen(),  # Show graphics
+    Put(255, 1),  # Stop when we've reached the color value 255
+    FillScreen(0),  # Fill screen
+    RefreshScreen(),  # Refresh screen
+    AddRegisterAndNumber(1, 0, 0),  # Increment color value
+    JumpIfEqual(0, 1, 7),  # Exit if we've reached 255
+    Jump(2),  # Otherwise, repeat the loop
+    Exit(0)  # Exit
+]
+
 EXAMPLE_PROGRAMS: Dict[str, List[Instruction]] = {
     "fib": FIBONACCI,
     "1337": PRINT_1337,
     "add": ADD_TWO_ARGS,
+    "graphics": GRAPHICS,
 }

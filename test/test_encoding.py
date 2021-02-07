@@ -1,24 +1,13 @@
 import os
 import tempfile
 
-from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Sleep
 from immolate.encoding import decode_instruction, encode_instruction, save_program_to_file, load_program_from_file
-from immolate.example_programs import FIBONACCI, PRINT_1337
+from immolate.example_programs import EXAMPLE_PROGRAMS
+from test.test_assembler import EXAMPLE_INSTRUCTIONS
 
 
 def test_instruction_encoding():
-    instructions = [
-        Put(42, 1),
-        Add(1, 2, 3),
-        AddRegisterAndNumber(42, 1, 2),
-        Jump(1),
-        JumpIfEqual(1, 2, 42),
-        Exit(42),
-        PrintRegister(1),
-        Sleep(1000)
-    ]
-
-    for instruction in instructions:
+    for (_, instruction) in EXAMPLE_INSTRUCTIONS:
         print(f"\nTesting instruction: {instruction}")
         encoded = encode_instruction(instruction)
         print(f"Encoded: {encoded}")
@@ -28,9 +17,8 @@ def test_instruction_encoding():
 
 
 def test_program_encoding():
-    programs = [FIBONACCI, PRINT_1337]
     with tempfile.TemporaryDirectory() as tempdir:
-        for i, program in enumerate(programs):
+        for i, program in enumerate(EXAMPLE_PROGRAMS.values()):
             print(f"Program: {program}")
             filepath = os.path.join(tempdir, f"test_program_{i}")
             save_program_to_file(program, filepath)
