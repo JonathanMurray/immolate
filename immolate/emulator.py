@@ -29,8 +29,13 @@ class Instruction(metaclass=ABCMeta):
 
 
 class Cpu:
-    def __init__(self, program: List[Instruction], debug: bool = False):
+    def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False):
         self.registers = [0, 0, 0, 0]
+        args = args or []
+        if len(args) > 4:
+            raise ValueError(f"Max 4 args are allowed. Got {len(args)}: {args}")
+        for i in range(len(args)):
+            self.registers[i] = args[i]
         self._program = program
         self.instruction_pointer = 0
         self.has_exited = False

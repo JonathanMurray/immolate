@@ -28,7 +28,14 @@ PRINT_1337 = [
     Exit(0),
 ]
 
+ADD_TWO_ARGS = [
+    Add(0, 1, 2),
+    PrintRegister(2),
+    Exit(0)
+]
+
 EXAMPLE_PROGRAMS: Dict[str, List[Instruction]] = {
     "fib": FIBONACCI,
     "1337": PRINT_1337,
+    "add": ADD_TWO_ARGS,
 }

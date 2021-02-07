@@ -32,9 +32,11 @@ def test_assembly_encoding_roundtrip():
         print(f"Decoded: {decoded}")
         assert instruction == decoded
 
+
 def test_fibonacci_example():
     program = load_program_from_assembly_file("files/fibonacci_assembly.txt")
     assert program == FIBONACCI
+
 
 def test_parse_assembly_line():
     assert parse_assembly_line("  ADD    r3 <- r1  r2  # this is a comment") == Add(1, 2, 3)
