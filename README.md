@@ -9,10 +9,10 @@ _An emulator, assembler and file-format for a very simplified made-up processor 
 echo "EXIT 0" > my_program.txt
 
 # Turn the program into code that the emulator can run
-./assemble my_program.txt my_program
+./assemble.py my_program.txt my_program
 
 # Run the program
-./run my_program
+./run.py my_program
 ```
 
 For a (slightly) larger example program, see [fibonacci](files/fibonacci_assembly.txt)
