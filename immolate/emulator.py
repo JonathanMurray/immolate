@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
-from typing import List
+from typing import List, Callable, Any
 
 
 class Instruction(metaclass=ABCMeta):
@@ -30,18 +30,22 @@ class Instruction(metaclass=ABCMeta):
 
 class Cpu:
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False):
-        self.registers = [0, 0, 0, 0]
         args = args or []
+        self.registers = [0, 0, 0, 0]
         if len(args) > 4:
             raise ValueError(f"Max 4 args are allowed. Got {len(args)}: {args}")
         for i in range(len(args)):
             self.registers[i] = args[i]
         self._program = program
+        self.output = []
         self.instruction_pointer = 0
         self.has_exited = False
         self.exit_code = None
-        self.output = []
         self._debug = debug
+
+    def do_output(self, output: int):
+        print(str(output))
+        self.output.append(str(output))
 
     def run_one_cycle(self):
         if self.instruction_pointer >= len(self._program):
@@ -261,7 +265,7 @@ class PrintRegister(Instruction):
     register: int  # 2
 
     def execute(self, cpu: Cpu):
-        cpu.output.append(str(cpu.registers[self.register]))
+        cpu.do_output(cpu.registers[self.register])
 
     @staticmethod
     def decode(b: bytes):

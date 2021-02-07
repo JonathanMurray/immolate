@@ -11,7 +11,6 @@ def run_program_from_file(filename: str, program_args: List[int]):
     cpu = Cpu(program, args=program_args)
     cpu.run_until_exit()
     print(f"Program exited with code {cpu.exit_code}")
-    print(f"Output: {cpu.output}")
 
 
 def main():

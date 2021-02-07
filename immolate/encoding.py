@@ -6,6 +6,13 @@ INSTRUCTION_CLASSES: List[Type[Instruction]] = [Put, Add, AddRegisterAndNumber, 
 MAGIC_WORD = b"immolate"
 
 
+def debug(text: str):
+    # Change this to toggle debug logging
+    show_debug_logs = False
+    if show_debug_logs:
+        print(text)
+
+
 def decode_instruction(b: bytes) -> Instruction:
     instruction_type_index: int = b[0]
     payload = b[1:3]
@@ -21,17 +28,17 @@ def encode_instruction(instruction: Instruction) -> bytes:
 
 
 def save_program_to_file(program: List[Instruction], filename: str):
-    print(f"Saving program to {filename}")
+    debug(f"Saving program to {filename}")
     with open(filename, "wb") as file:
         file.write(MAGIC_WORD)
         for instruction in program:
             b = encode_instruction(instruction)
             file.write(b)
-    print("Saved.")
+    debug("Saved.")
 
 
 def load_program_from_file(filename: str) -> List[Instruction]:
-    print(f"Reading program from {filename}")
+    debug(f"Reading program from {filename}")
     program = []
     with open(filename, "rb") as file:
         first_part = file.read(len(MAGIC_WORD))
@@ -44,5 +51,5 @@ def load_program_from_file(filename: str) -> List[Instruction]:
             elif len(chunk) != 3:
                 raise Exception(f"File ended unexpectedly. Last read bytes: {chunk}")
             program.append(decode_instruction(chunk))
-    print(f"Read {len(program)} instructions.")
+    debug(f"Read {len(program)} instructions.")
     return program

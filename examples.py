@@ -14,7 +14,6 @@ def run_example(name: str, program_args: List[int]):
     cpu.run_until_exit()
     print(cpu)
     print(f"Program exited with code {cpu.exit_code}")
-    print(f"Output: {cpu.output}")
 
 
 def main():
