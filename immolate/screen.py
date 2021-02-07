@@ -1,4 +1,9 @@
-import pygame
+from contextlib import redirect_stdout
+from io import StringIO
+
+with redirect_stdout(StringIO()):
+    # Pygame logs a message upon being imported, but we want to keep the console clean in this project.
+    import pygame
 from pygame import Surface
 from pygame.time import Clock
 
