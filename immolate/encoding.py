@@ -1,8 +1,9 @@
 from typing import List, Type
 
-from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction
+from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction, Sleep
 
-INSTRUCTION_CLASSES: List[Type[Instruction]] = [Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister]
+INSTRUCTION_CLASSES: List[Type[Instruction]] = [Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister,
+                                                Sleep]
 MAGIC_WORD = b"immolate"
 
 

@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
+from time import sleep
 from typing import List, Dict
 
 
@@ -29,7 +30,8 @@ class Instruction(metaclass=ABCMeta):
 
 
 class Cpu:
-    def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False):
+    def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
+        allow_sleeps: bool = False):
         args = args or []
         self.registers = [0, 0, 0, 0]
         if len(args) > 4:
@@ -42,6 +44,7 @@ class Cpu:
         self.has_exited = False
         self.exit_code = None
         self._debug = debug
+        self._allow_sleeps = allow_sleeps
 
     def do_output(self, output: int):
         print(str(output))
@@ -62,6 +65,10 @@ class Cpu:
 
     def __str__(self):
         return f"Reg: {self.registers}, Instruction pointer: {self.instruction_pointer}"
+
+    def sleep(self, millis: int):
+        if self._allow_sleeps:
+            sleep(millis / 1000.0)
 
 
 @dataclass
@@ -286,6 +293,34 @@ class PrintRegister(Instruction):
     @staticmethod
     def assembly_name() -> str:
         return "PRINT"
+
+
+@dataclass
+class Sleep(Instruction):
+    millis: int  # 16
+
+    def execute(self, cpu: Cpu):
+        cpu.sleep(self.millis)
+
+    @staticmethod
+    def decode(b: bytes):
+        millis = int.from_bytes(b[0:2], byteorder="big")
+        return Sleep(millis)
+
+    def __bytes__(self) -> bytes:
+        return self.millis.to_bytes(2, byteorder="big")
+
+    @staticmethod
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        millis = int(tokens[1])
+        return Sleep(millis)
+
+    def __str__(self):
+        return f"{self.assembly_name()} {self.millis}"
+
+    @staticmethod
+    def assembly_name() -> str:
+        return "SLEEP"
 
 
 def _assert_arrow(token: str):

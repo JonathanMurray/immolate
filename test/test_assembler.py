@@ -1,5 +1,5 @@
 from immolate.assembler import parse_instruction_tokens, parse_assembly_line, load_program_from_assembly_file
-from immolate.emulator import Put, PrintRegister, Exit, Add, AddRegisterAndNumber, Jump, JumpIfEqual
+from immolate.emulator import Put, PrintRegister, Exit, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Sleep
 from immolate.example_programs import FIBONACCI
 
 
@@ -11,6 +11,7 @@ def test_parse_instruction_tokens():
     assert parse_instruction_tokens(["JUMP_EQ", "42", "<-", "r1", "r2"], {}) == JumpIfEqual(1, 2, 42)
     assert parse_instruction_tokens(["EXIT", "1"], {}) == Exit(1)
     assert parse_instruction_tokens(["PRINT", "r1"], {}) == PrintRegister(1)
+    assert parse_instruction_tokens(["SLEEP", "1000"], {}) == Sleep(1000)
 
 
 def test_parse_jump_instructions_with_labels():
@@ -27,6 +28,7 @@ def test_assembly_encoding_roundtrip():
         JumpIfEqual(1, 2, 42),
         Exit(42),
         PrintRegister(1),
+        Sleep(1000)
     ]
 
     for instruction in instructions:

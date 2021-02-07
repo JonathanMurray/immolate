@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister
+from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Sleep
 from immolate.encoding import decode_instruction, encode_instruction, save_program_to_file, load_program_from_file
 from immolate.example_programs import FIBONACCI, PRINT_1337
 
@@ -15,6 +15,7 @@ def test_instruction_encoding():
         JumpIfEqual(1, 2, 42),
         Exit(42),
         PrintRegister(1),
+        Sleep(1000)
     ]
 
     for instruction in instructions:

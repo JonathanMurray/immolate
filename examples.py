@@ -9,7 +9,7 @@ from immolate.example_programs import EXAMPLE_PROGRAMS
 def run_example(name: str, program_args: List[int]):
     program = EXAMPLE_PROGRAMS[name]
     print(f"Running example program '{name}' ({len(program)} instructions long)")
-    cpu = Cpu(program, args=program_args)
+    cpu = Cpu(program, args=program_args, allow_sleeps=True)
     print(cpu)
     cpu.run_until_exit()
     print(cpu)
