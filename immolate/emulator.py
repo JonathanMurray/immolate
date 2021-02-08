@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from time import sleep
 from typing import List, Dict
 
-from immolate.screen import Screen
+from immolate.screen import Screen, FakeScreen
 
 
 class Instruction(metaclass=ABCMeta):
@@ -33,7 +33,8 @@ class Instruction(metaclass=ABCMeta):
 
 class Cpu:
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
-        allow_sleeps: bool = False):
+        allow_sleeps: bool = False, screen: Screen = None):
+
         args = args or []
         self.registers = [0, 0, 0, 0]
         if len(args) > 4:
@@ -47,7 +48,7 @@ class Cpu:
         self.exit_code = None
         self._debug = debug
         self._allow_sleeps = allow_sleeps
-        self._screen: Screen = None
+        self._screen = screen or FakeScreen()
 
     def do_output(self, output: int):
         print(str(output))
@@ -74,23 +75,14 @@ class Cpu:
             sleep(millis / 1000.0)
 
     def activate_screen(self):
-        if self._screen:
-            raise Exception("Screen is already active!")
-        self._screen = Screen()
         self._screen.activate()
         self._screen.run_one_frame()
 
     def refresh_screen(self):
-        self._assert_active_screen()
         self._screen.run_one_frame()
 
     def fill_screen(self, color: int):
-        self._assert_active_screen()
         self._screen.color = color
-
-    def _assert_active_screen(self):
-        if not self._screen:
-            raise Exception("Screen has not been activated yet!")
 
 
 @dataclass

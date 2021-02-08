@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 from contextlib import redirect_stdout
 from io import StringIO
 
@@ -13,7 +14,34 @@ def scale(surface: Surface) -> Surface:
     return scale2x(scale2x(surface))
 
 
-class Screen:
+class Screen(metaclass=ABCMeta):
+    color: int
+
+    @abstractmethod
+    def activate(self):
+        pass
+
+    @abstractmethod
+    def run_one_frame(self):
+        pass
+
+
+class FakeScreen(Screen):
+
+    def __init__(self):
+        self._active = False
+
+    def activate(self):
+        if self._active:
+            raise Exception("Screen is already active!")
+        self._active = True
+
+    def run_one_frame(self):
+        if not self._active:
+            raise Exception("Screen has not been activated yet!")
+
+
+class PygameScreen(Screen):
     def __init__(self):
         self.color = 0
         self._scaling = 4
@@ -21,16 +49,22 @@ class Screen:
         self._surface = None
         self._clock = None
         self._screen = None
+        self._active = False
 
     def activate(self):
+        if self._active:
+            raise Exception("Screen is already active!")
         resolution = (128, 128)
         size = (resolution[0] * self._scaling, resolution[1] * self._scaling)
         self._surface = Surface(resolution)
         self._clock = Clock()
         self._screen = pygame.display.set_mode(size)
         pygame.display.set_caption(self._caption)
+        self._active = True
 
     def run_one_frame(self):
+        if not self._active:
+            raise Exception("Screen has not been activated yet!")
         self._clock.tick(30)
         events = pygame.event.get()
         for event in events:
