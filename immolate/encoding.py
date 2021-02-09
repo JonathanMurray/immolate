@@ -1,10 +1,9 @@
 from typing import List, Type
 
-from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction, \
-    Sleep, ActivateScreen, RefreshScreen, FillScreen
+from immolate.emulator import Instruction
 
-INSTRUCTION_CLASSES: List[Type[Instruction]] = [Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister,
-                                                Sleep, ActivateScreen, RefreshScreen, FillScreen]
+# noinspection PyTypeChecker
+INSTRUCTION_CLASSES: List[Type[Instruction]] = Instruction.__subclasses__()
 MAGIC_WORD = b"immolate"
 
 

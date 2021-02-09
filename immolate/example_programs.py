@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from immolate.emulator import Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister, Instruction, \
-    Sleep, ActivateScreen, RefreshScreen, FillScreen
+    Sleep, ActivateScreen, RefreshScreen, FillScreen, Breakpoint
 
 FIBONACCI = [
     PrintRegister(0),  # Print fib(0)
@@ -50,9 +50,19 @@ GRAPHICS = [
     Exit(0)  # Exit
 ]
 
+BREAKPOINT = [
+    Put(1, 0),
+    PrintRegister(0),
+    Breakpoint(),
+    Put(2, 0),
+    PrintRegister(0),
+    Exit(0)
+]
+
 EXAMPLE_PROGRAMS: Dict[str, List[Instruction]] = {
     "fib": FIBONACCI,
     "1337": PRINT_1337,
     "add": ADD_TWO_ARGS,
     "graphics": GRAPHICS,
+    "breakpoint": BREAKPOINT,
 }

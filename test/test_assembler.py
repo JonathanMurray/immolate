@@ -1,6 +1,6 @@
 from immolate.assembler import parse_instruction_tokens, parse_assembly_line, load_program_from_assembly_file
 from immolate.emulator import Put, PrintRegister, Exit, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Sleep, \
-    ActivateScreen, FillScreen, RefreshScreen, Instruction
+    ActivateScreen, FillScreen, RefreshScreen, Instruction, Breakpoint
 from immolate.example_programs import FIBONACCI
 
 EXAMPLE_INSTRUCTIONS = [
@@ -15,6 +15,7 @@ EXAMPLE_INSTRUCTIONS = [
     (["ACTIVATE_SCREEN"], ActivateScreen()),
     (["FILL_SCREEN", "r1"], FillScreen(1)),
     (["REFRESH_SCREEN"], RefreshScreen()),
+    (["BREAKPOINT"], Breakpoint()),
 ]
 
 

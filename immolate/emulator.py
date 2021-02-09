@@ -49,13 +49,18 @@ class Cpu:
         self._debug = debug
         self._allow_sleeps = allow_sleeps
         self._screen = screen or FakeScreen()
+        self.halted = False
 
     def do_output(self, output: int):
         print(str(output))
         self.output.append(str(output))
 
-    def run_until_exit(self):
-        while not self.has_exited:
+    def run_until_exit_or_halt(self):
+        if self.has_exited:
+            raise Exception("CPU has exited!")
+        if self.halted:
+            raise Exception("CPU has halted!")
+        while not self.has_exited and not self.halted:
             self.run_one_cycle()
 
     def run_one_cycle(self):
@@ -83,6 +88,26 @@ class Cpu:
 
     def fill_screen(self, color: int):
         self._screen.color = color
+
+    def dump(self) -> str:
+        return (
+            f"+----------------------+\n"
+            f"|  CPU                 |\n"
+            f"|                      |\n"
+            f"|  registers:          |\n"
+            f"| +---------------+    |\n"
+            f"| |{self.registers[0]: >3}"
+            f"|{self.registers[1]: >3}"
+            f"|{self.registers[2]: >3}"
+            f"|{self.registers[3]: >3}|    |\n"
+            f"| +---------------+    |\n"
+            f"|                      |\n"
+            f"|  instr. ptr: {self.instruction_pointer: > 3}     |\n"
+            f"|                      |\n"
+            f"|  next instruction:   |\n"
+            f"|  {str(self._program[self.instruction_pointer]).ljust(20)}|\n"
+            f"+----------------------+"
+        )
 
 
 @dataclass
@@ -413,6 +438,31 @@ class FillScreen(Instruction):
     @staticmethod
     def assembly_name() -> str:
         return "FILL_SCREEN"
+
+
+@dataclass
+class Breakpoint(Instruction):
+
+    def execute(self, cpu: Cpu):
+        cpu.halted = True
+
+    @staticmethod
+    def decode(b: bytes):
+        return Breakpoint()
+
+    def __bytes__(self) -> bytes:
+        return bytes(2)
+
+    @staticmethod
+    def decode_assembly(tokens: List[str], labels: Dict[str, int]):
+        return Breakpoint()
+
+    def __str__(self):
+        return f"{self.assembly_name()}"
+
+    @staticmethod
+    def assembly_name() -> str:
+        return "BREAKPOINT"
 
 
 def _assert_arrow(token: str):

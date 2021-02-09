@@ -4,19 +4,14 @@ from typing import List
 
 from immolate.emulator import Cpu
 from immolate.example_programs import EXAMPLE_PROGRAMS
+from immolate.runner import run_program
+from immolate.screen import PygameScreen
 
 
 def run_example(name: str, program_args: List[int]):
     program = EXAMPLE_PROGRAMS[name]
-    print(f"Running example program '{name}' ({len(program)} instructions long)")
-    cpu = Cpu(program, args=program_args, allow_sleeps=True)
-    print(cpu)
-    try:
-        cpu.run_until_exit()
-    except Exception as e:
-        raise Exception(f"Program crashed: {e}") from e
-    print(cpu)
-    print(f"Program exited with code {cpu.exit_code}")
+    cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=PygameScreen())
+    run_program(cpu)
 
 
 def main():
