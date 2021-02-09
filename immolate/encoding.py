@@ -1,6 +1,6 @@
 from typing import List, Type
 
-from immolate.emulator import Instruction
+from immolate.instructions import Instruction
 
 # noinspection PyTypeChecker
 INSTRUCTION_CLASSES: List[Type[Instruction]] = Instruction.__subclasses__()

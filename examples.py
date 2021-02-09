@@ -2,7 +2,7 @@
 import sys
 from typing import List
 
-from immolate.emulator import Cpu
+from immolate.cpu import Cpu
 from immolate.example_programs import EXAMPLE_PROGRAMS
 from immolate.runner import run_program
 from immolate.screen import PygameScreen

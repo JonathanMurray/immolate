@@ -1,7 +1,18 @@
 from immolate.assembler import parse_instruction_tokens, parse_assembly_line, load_program_from_assembly_file
-from immolate.emulator import Put, PrintRegister, Exit, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Sleep, \
-    ActivateScreen, FillScreen, RefreshScreen, Instruction, Breakpoint
 from immolate.example_programs import FIBONACCI
+from immolate.instructions import Instruction
+from immolate.instructions.activate_screen import ActivateScreen
+from immolate.instructions.add import Add
+from immolate.instructions.add_register_and_number import AddRegisterAndNumber
+from immolate.instructions.breakpoint import Breakpoint
+from immolate.instructions.exit import Exit
+from immolate.instructions.fill_screen import FillScreen
+from immolate.instructions.jump import Jump
+from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.print_register import PrintRegister
+from immolate.instructions.put import Put
+from immolate.instructions.refresh_screen import RefreshScreen
+from immolate.instructions.sleep import Sleep
 
 EXAMPLE_INSTRUCTIONS = [
     (["PUT", "r1", "<-", "42"], Put(42, 1)),

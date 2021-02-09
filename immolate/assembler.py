@@ -1,8 +1,8 @@
 import re
 from typing import List, Optional, Dict, Tuple
 
-from immolate.emulator import Instruction
 from immolate.encoding import INSTRUCTION_CLASSES
+from immolate.instructions import Instruction
 
 
 def save_program_to_assembly_file(program: List[Instruction], filename: str):

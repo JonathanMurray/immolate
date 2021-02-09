@@ -1,4 +1,4 @@
-from immolate.emulator import Cpu
+from immolate.cpu import Cpu
 
 
 def run_program(cpu: Cpu):

@@ -1,4 +1,4 @@
-from immolate.emulator import Cpu
+from immolate.cpu import Cpu
 from immolate.example_programs import FIBONACCI, PRINT_1337, ADD_TWO_ARGS, GRAPHICS, BREAKPOINT
 from immolate.screen import FakeScreen
 
