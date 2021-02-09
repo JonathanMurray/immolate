@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 import sys
 
-from immolate.assembler import save_program_to_assembly_file
-from immolate.encoding import load_program_from_file
+from immolate.encoding import assembly, binary
 
 
 def assemble(executable_filename: str, assembly_filename: str):
-    program = load_program_from_file(executable_filename)
-    save_program_to_assembly_file(program, assembly_filename)
+    program = binary.load_program_from_file(executable_filename)
+    assembly.save_program_to_file(program, assembly_filename)
 
 
 def main():

@@ -3,13 +3,13 @@ import sys
 from typing import List
 
 from immolate.cpu import Cpu
-from immolate.encoding import load_program_from_file
+from immolate.encoding import binary
 from immolate.runner import run_program
 from immolate.screen import PygameScreen
 
 
 def run_program_from_file(filename: str, program_args: List[int]):
-    program = load_program_from_file(filename)
+    program = binary.load_program_from_file(filename)
     cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=PygameScreen())
     run_program(cpu)
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import sys
 
-from immolate.encoding import load_program_from_file
+from immolate.encoding import binary
 
 
 def parse_program_in_file(filename: str):
-    program = load_program_from_file(filename)
+    program = binary.load_program_from_file(filename)
     for i, instruction in enumerate(program):
         print(f"{i}: {instruction}")
 

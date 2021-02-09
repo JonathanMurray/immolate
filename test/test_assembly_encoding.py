@@ -1,4 +1,4 @@
-from immolate.assembler import parse_instruction_tokens, parse_assembly_line, load_program_from_assembly_file
+from immolate.encoding.assembly import load_program_from_file, parse_assembly_line, parse_instruction_tokens
 from immolate.example_programs import FIBONACCI
 from immolate.instructions import Instruction
 from immolate.instructions.activate_screen import ActivateScreen
@@ -48,7 +48,7 @@ def test_parse_jump_instructions_with_labels():
 
 
 def test_fibonacci_example():
-    program = load_program_from_assembly_file("files/fibonacci_assembly.txt")
+    program = load_program_from_file("files/fibonacci_assembly.txt")
     assert program == FIBONACCI
 
 

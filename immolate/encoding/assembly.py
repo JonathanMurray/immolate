@@ -1,11 +1,11 @@
 import re
-from typing import List, Optional, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
-from immolate.encoding import INSTRUCTION_CLASSES
+from immolate.encoding.binary import INSTRUCTION_CLASSES
 from immolate.instructions import Instruction
 
 
-def save_program_to_assembly_file(program: List[Instruction], filename: str):
+def save_program_to_file(program: List[Instruction], filename: str):
     print(f"Saving program to {filename}")
     with open(filename, "w") as file:
         for instruction in program:
@@ -14,7 +14,7 @@ def save_program_to_assembly_file(program: List[Instruction], filename: str):
     return program
 
 
-def load_program_from_assembly_file(filename: str) -> List[Instruction]:
+def load_program_from_file(filename: str) -> List[Instruction]:
     print(f"Loading program from {filename}")
     with open(filename, "r") as file:
         lines = file.readlines()

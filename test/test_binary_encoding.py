@@ -1,9 +1,10 @@
 import os
 import tempfile
 
-from immolate.encoding import decode_instruction, encode_instruction, save_program_to_file, load_program_from_file
+from immolate.encoding.binary import decode_instruction, encode_instruction, save_program_to_file, \
+    load_program_from_file
 from immolate.example_programs import EXAMPLE_PROGRAMS
-from test.test_assembler import EXAMPLE_INSTRUCTIONS
+from test.test_assembly_encoding import EXAMPLE_INSTRUCTIONS
 
 
 def test_instruction_encoding():
