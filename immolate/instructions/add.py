@@ -12,7 +12,7 @@ class Add(Instruction):
     destination_register: int  # 2
 
     def execute(self, cpu: Cpu):
-        cpu.registers[self.destination_register] = cpu.registers[self.register_a] + cpu.registers[self.register_b]
+        cpu.add(cpu.registers[self.register_a], cpu.registers[self.register_b], self.destination_register)
 
     @staticmethod
     def decode(b: bytes):

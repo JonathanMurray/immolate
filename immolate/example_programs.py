@@ -20,7 +20,7 @@ FIBONACCI = [
     Put(1, 0),  # Prepare fib(1)
     PrintRegister(0),  # Print fib(1)
     Sleep(250),
-    Put(5, 2),  # Limit the number of loops
+    Put(7, 2),  # Limit the number of loops
     Add(0, 1, 1),  # Compute fib(n)
     PrintRegister(1),  # Print fib(n)
     Sleep(250),

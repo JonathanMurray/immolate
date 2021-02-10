@@ -10,6 +10,10 @@ class Put(Instruction):
     value: int  # 8
     register: int  # 2
 
+    def __post_init__(self):
+        if self.value >= Cpu.REGISTER_SIZE:
+            raise ValueError("Value must fit in 1 byte!")
+
     def execute(self, cpu: Cpu):
         cpu.registers[self.register] = self.value
 

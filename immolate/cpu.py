@@ -6,15 +6,18 @@ from immolate.screen import Screen, FakeScreen
 
 
 class Cpu:
+    REGISTER_SIZE = 256  # 8-bit
+
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
         allow_sleeps: bool = False, screen: Screen = None):
-
         args = args or []
-        self.registers = [0, 0, 0, 0]
         if len(args) > 4:
             raise ValueError(f"Max 4 args are allowed. Got {len(args)}: {args}")
+
+        self.registers = [0, 0, 0, 0]
         for i in range(len(args)):
             self.registers[i] = args[i]
+        self.carry_flag = None
         self._program = program
         self.output = []
         self.instruction_pointer = 0
@@ -24,6 +27,11 @@ class Cpu:
         self._allow_sleeps = allow_sleeps
         self._screen = screen or FakeScreen()
         self.halted = False
+
+    def add(self, a: int, b: int, destination_register: int):
+        result = a + b
+        self.registers[destination_register] = result % Cpu.REGISTER_SIZE
+        self.carry_flag = result >= Cpu.REGISTER_SIZE
 
     def do_output(self, output: int):
         print(str(output))

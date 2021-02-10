@@ -3,7 +3,7 @@
   PUT r0 <- 1            # Prepare fib(1)
   PRINT r0               # Print fib(1)
   SLEEP 250
-  PUT r2 <- 5            # Limit the number of loops
+  PUT r2 <- 7            # Limit the number of loops
 LOOP:
   ADD r1 <- r0 r1        # Compute fib(n)
   PRINT r1               # Print fib(n)

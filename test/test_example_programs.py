@@ -6,7 +6,8 @@ from immolate.screen import FakeScreen
 def test_fibonacci():
     cpu = Cpu(FIBONACCI)
     cpu.run_until_exit_or_halt()
-    assert cpu.output == ["0", "1", "1", "2", "3", "5", "8", "13", "21", "34", "55", "89"]
+    # Fibonacci sequence loops around at 255
+    assert cpu.output == ["0", "1", "1", "2", "3", "5", "8", "13", "21", "34", "55", "89", "144", "233", "121", "98"]
 
 
 def test_1337():
