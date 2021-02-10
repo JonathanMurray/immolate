@@ -9,6 +9,7 @@ from immolate.instructions.exit import Exit
 from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.memory import Store, Load
 from immolate.instructions.print_register import PrintRegister
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
@@ -33,6 +34,8 @@ EXAMPLE_INSTRUCTIONS = [
     (["POP", "r1"], Pop(1)),
     (["CALL_SUBROUTINE", "42"], CallSubroutine(42)),
     (["RETURN"], Return()),
+    (["STORE", "42", "->", "[123]"], Store(42, 123)),
+    (["LOAD", "r1", "<-", "[123]"], Load(1, 123)),
 ]
 
 

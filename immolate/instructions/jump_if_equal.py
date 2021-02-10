@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from immolate.cpu import Cpu
-from immolate.instructions import Instruction, _assert_arrow, _parse_register, _parse_jump_destination
+from immolate.instructions import Instruction, _assert_left_arrow, _parse_register, _parse_jump_destination
 
 
 @dataclass
@@ -28,7 +28,7 @@ class JumpIfEqual(Instruction):
     @staticmethod
     def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         instruction_index = _parse_jump_destination(tokens[1], labels)
-        _assert_arrow(tokens[2])
+        _assert_left_arrow(tokens[2])
         register_a = _parse_register(tokens[3])
         register_b = _parse_register(tokens[4])
         return JumpIfEqual(register_a, register_b, instruction_index)

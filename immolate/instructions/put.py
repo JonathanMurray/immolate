@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from immolate.cpu import Cpu
-from immolate.instructions import Instruction, _assert_arrow, _parse_register
+from immolate.instructions import Instruction, _assert_left_arrow, _parse_register
 
 
 @dataclass
@@ -11,7 +11,7 @@ class Put(Instruction):
     register: int  # 2
 
     def __post_init__(self):
-        Cpu.assert_fits_in_register(self.value)
+        Cpu.assert_fits_in_word(self.value)
 
     def execute(self, cpu: Cpu):
         cpu.registers[self.register] = self.value
@@ -28,7 +28,7 @@ class Put(Instruction):
     @staticmethod
     def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         register = _parse_register(tokens[1])
-        _assert_arrow(tokens[2])
+        _assert_left_arrow(tokens[2])
         value = int(tokens[3])
         return Put(value, register)
 

@@ -27,15 +27,26 @@ class Instruction(metaclass=ABCMeta):
         pass
 
 
-def _assert_arrow(token: str):
+def _assert_left_arrow(token: str):
     if token != "<-":
         raise ValueError(f"Expected '<-' but got '{token}'")
+
+
+def _assert_right_arrow(token: str):
+    if token != "->":
+        raise ValueError(f"Expected '->' but got '{token}'")
 
 
 def _parse_register(token: str) -> int:
     if not token.startswith("r"):
         raise ValueError(f"Expected register token but got '{token}'")
     return int(token[1:])
+
+
+def _parse_memory_address(token: str) -> int:
+    if not (token.startswith("[") and token.endswith("]")):
+        raise ValueError(f"Expected memory address but got '{token}'")
+    return int(token[1:-1])
 
 
 def _parse_jump_destination(destination: str, labels: Dict[str, int]):

@@ -3,6 +3,7 @@ from pytest import fail
 from immolate.cpu import Cpu
 from immolate.instructions.add import Add
 from immolate.instructions.add_register_and_number import AddRegisterAndNumber
+from immolate.instructions.memory import Store, Load
 from immolate.instructions.put import Put
 from immolate.instructions.stack import Push, Pop
 from immolate.instructions.subroutine import CallSubroutine, Return
@@ -70,3 +71,15 @@ def test_subroutine_call_and_return():
     Return().execute(cpu)
 
     assert cpu.instruction_pointer == 10
+
+
+def test_memory():
+    cpu = Cpu([])
+
+    Store(42, 123).execute(cpu)
+
+    assert cpu.memory[123] == 42
+
+    Load(1, 123).execute(cpu)
+
+    assert cpu.registers[1] == 42

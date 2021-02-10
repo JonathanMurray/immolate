@@ -9,6 +9,7 @@ from immolate.instructions.exit import Exit
 from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.memory import Store, Load
 from immolate.instructions.print_register import PrintRegister
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
@@ -18,4 +19,4 @@ from immolate.instructions.subroutine import CallSubroutine, Return
 
 INSTRUCTION_CLASSES: List[Type[Instruction]] = [Put, Add, AddRegisterAndNumber, Jump, JumpIfEqual, Exit, PrintRegister,
                                                 Sleep, ActivateScreen, RefreshScreen, FillScreen, Breakpoint, Push, Pop,
-                                                CallSubroutine, Return]
+                                                CallSubroutine, Return, Store, Load]

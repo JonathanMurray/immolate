@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from immolate.cpu import Cpu
-from immolate.instructions import Instruction, _assert_arrow, _parse_register
+from immolate.instructions import Instruction, _assert_left_arrow, _parse_register
 
 
 @dataclass
@@ -27,7 +27,7 @@ class Add(Instruction):
     @staticmethod
     def decode_assembly(tokens: List[str], labels: Dict[str, int]):
         destination_register = _parse_register(tokens[1])
-        _assert_arrow(tokens[2])
+        _assert_left_arrow(tokens[2])
         register_a = _parse_register(tokens[3])
         register_b = _parse_register(tokens[4])
         return Add(register_a, register_b, destination_register)

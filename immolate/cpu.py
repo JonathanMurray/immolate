@@ -6,11 +6,11 @@ from immolate.screen import Screen, FakeScreen
 
 
 class Cpu:
-    REGISTER_SIZE = 256  # 8-bit
+    WORD_SIZE = 256  # 8-bit
 
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
         allow_sleeps: bool = False, screen: Screen = None):
-        if len(program) >= Cpu.REGISTER_SIZE:
+        if len(program) >= Cpu.WORD_SIZE:
             raise ValueError(f"Program too large for address space. Len={program}")
         args = args or []
         if len(args) > 4:
@@ -30,11 +30,12 @@ class Cpu:
         self._screen = screen or FakeScreen()
         self.halted = False
         self.stack = []
+        self.memory = [0] * Cpu.WORD_SIZE
 
     def add(self, a: int, b: int, destination_register: int):
         result = a + b
-        self.registers[destination_register] = result % Cpu.REGISTER_SIZE
-        self.carry_flag = result >= Cpu.REGISTER_SIZE
+        self.registers[destination_register] = result % Cpu.WORD_SIZE
+        self.carry_flag = result >= Cpu.WORD_SIZE
 
     def do_output(self, output: int):
         print(str(output))
@@ -95,6 +96,6 @@ class Cpu:
         )
 
     @staticmethod
-    def assert_fits_in_register(value: int):
-        if value >= Cpu.REGISTER_SIZE:
+    def assert_fits_in_word(value: int):
+        if value >= Cpu.WORD_SIZE:
             raise ValueError(f"Expected value that fits in register, but got: {value}")

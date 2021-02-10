@@ -10,7 +10,7 @@ class Push(Instruction):
     value: int  # 8
 
     def __post_init__(self):
-        Cpu.assert_fits_in_register(self.value)
+        Cpu.assert_fits_in_word(self.value)
 
     def execute(self, cpu: Cpu):
         cpu.stack.append(self.value)
