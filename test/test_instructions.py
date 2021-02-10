@@ -6,6 +6,7 @@ from immolate.instructions.add_register_and_number import AddRegisterAndNumber
 from immolate.instructions.pop import Pop
 from immolate.instructions.push import Push
 from immolate.instructions.put import Put
+from immolate.instructions.subroutine import CallSubroutine, Return
 
 
 def test_add():
@@ -47,7 +48,7 @@ def test_put():
         pass
 
 
-def test_push_pop():
+def test_stack_push_and_pop():
     cpu = Cpu([])
 
     Push(42).execute(cpu)
@@ -57,3 +58,16 @@ def test_push_pop():
 
     assert cpu.registers[0] == 43
     assert cpu.registers[1] == 42
+
+
+def test_subroutine_call_and_return():
+    cpu = Cpu([])
+    cpu.instruction_pointer = 10
+
+    CallSubroutine(42).execute(cpu)
+
+    assert cpu.instruction_pointer == 42
+
+    Return().execute(cpu)
+
+    assert cpu.instruction_pointer == 10

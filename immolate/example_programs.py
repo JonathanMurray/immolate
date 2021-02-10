@@ -13,6 +13,7 @@ from immolate.instructions.print_register import PrintRegister
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
 from immolate.instructions.sleep import Sleep
+from immolate.instructions.subroutine import Return, CallSubroutine
 
 FIBONACCI = [
     PrintRegister(0),  # Print fib(0)
@@ -70,10 +71,24 @@ BREAKPOINT = [
     Exit(0)
 ]
 
+SUBROUTINE = [
+    CallSubroutine(4),
+    CallSubroutine(4),
+    CallSubroutine(4),
+    Jump(7),
+    # Start of subroutine
+    AddRegisterAndNumber(1, 0, 0),
+    PrintRegister(0),
+    Return(),
+    # End of subroutine
+    Exit(0)
+]
+
 EXAMPLE_PROGRAMS: Dict[str, List[Instruction]] = {
     "fib": FIBONACCI,
     "1337": PRINT_1337,
     "add": ADD_TWO_ARGS,
     "graphics": GRAPHICS,
     "breakpoint": BREAKPOINT,
+    "subroutine": SUBROUTINE,
 }

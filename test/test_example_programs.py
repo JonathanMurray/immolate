@@ -1,5 +1,5 @@
 from immolate.cpu import Cpu
-from immolate.example_programs import FIBONACCI, PRINT_1337, ADD_TWO_ARGS, GRAPHICS, BREAKPOINT
+from immolate.example_programs import FIBONACCI, PRINT_1337, ADD_TWO_ARGS, GRAPHICS, BREAKPOINT, SUBROUTINE
 from immolate.screen import FakeScreen
 
 
@@ -38,3 +38,9 @@ def test_breakpoint():
     cpu.halted = False
     cpu.run_until_exit_or_halt()
     assert cpu.output == ["1", "2"]
+
+
+def test_subroutine():
+    cpu = Cpu(SUBROUTINE)
+    cpu.run_until_exit_or_halt()
+    assert cpu.output == ["1", "2", "3"]

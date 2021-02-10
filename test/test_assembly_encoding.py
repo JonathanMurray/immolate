@@ -15,6 +15,7 @@ from immolate.instructions.push import Push
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
 from immolate.instructions.sleep import Sleep
+from immolate.instructions.subroutine import CallSubroutine, Return
 
 EXAMPLE_INSTRUCTIONS = [
     (["PUT", "r1", "<-", "42"], Put(42, 1)),
@@ -31,6 +32,8 @@ EXAMPLE_INSTRUCTIONS = [
     (["BREAKPOINT"], Breakpoint()),
     (["PUSH", "42"], Push(42)),
     (["POP", "r1"], Pop(1)),
+    (["CALL_SUBROUTINE", "42"], CallSubroutine(42)),
+    (["RETURN"], Return()),
 ]
 
 
