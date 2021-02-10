@@ -3,9 +3,8 @@ from pytest import fail
 from immolate.cpu import Cpu
 from immolate.instructions.add import Add
 from immolate.instructions.add_register_and_number import AddRegisterAndNumber
-from immolate.instructions.pop import Pop
-from immolate.instructions.push import Push
 from immolate.instructions.put import Put
+from immolate.instructions.stack import Push, Pop
 from immolate.instructions.subroutine import CallSubroutine, Return
 
 

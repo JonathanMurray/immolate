@@ -10,6 +10,8 @@ class Cpu:
 
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
         allow_sleeps: bool = False, screen: Screen = None):
+        if len(program) >= Cpu.REGISTER_SIZE:
+            raise ValueError(f"Program too large for address space. Len={program}")
         args = args or []
         if len(args) > 4:
             raise ValueError(f"Max 4 args are allowed. Got {len(args)}: {args}")

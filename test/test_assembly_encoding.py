@@ -9,12 +9,11 @@ from immolate.instructions.exit import Exit
 from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
-from immolate.instructions.pop import Pop
 from immolate.instructions.print_register import PrintRegister
-from immolate.instructions.push import Push
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
 from immolate.instructions.sleep import Sleep
+from immolate.instructions.stack import Push, Pop
 from immolate.instructions.subroutine import CallSubroutine, Return
 
 EXAMPLE_INSTRUCTIONS = [
