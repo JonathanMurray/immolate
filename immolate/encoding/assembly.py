@@ -1,8 +1,8 @@
 import re
 from typing import List, Dict, Tuple, Optional
 
-from immolate.encoding.binary import INSTRUCTION_CLASSES
 from immolate.instructions import Instruction
+from immolate.instructions.classes import INSTRUCTION_CLASSES
 
 
 def save_program_to_file(program: List[Instruction], filename: str):
@@ -64,7 +64,10 @@ def parse_assembly_line(line: str, labels: Dict[str, int]) -> Instruction:
 
 def parse_instruction_tokens(tokens: List[str], labels: Dict[str, int]) -> Instruction:
     try:
-        cls = [cls for cls in INSTRUCTION_CLASSES if cls.assembly_name() == tokens[0]][0]
+        class_match = [cls for cls in INSTRUCTION_CLASSES if cls.assembly_name() == tokens[0]]
+        if not class_match:
+            raise ValueError(f"No class found for {tokens[0]}")
+        cls = class_match[0]
         return cls.decode_assembly(tokens, labels)
     except Exception as e:
         raise ValueError(f"Failed to parse instruction from tokens {tokens}: {e}") from e

@@ -27,6 +27,7 @@ class Cpu:
         self._allow_sleeps = allow_sleeps
         self._screen = screen or FakeScreen()
         self.halted = False
+        self.stack = []
 
     def add(self, a: int, b: int, destination_register: int):
         result = a + b
@@ -90,3 +91,8 @@ class Cpu:
             f"|  {str(self._program[self.instruction_pointer]).ljust(20)}|\n"
             f"+----------------------+"
         )
+
+    @staticmethod
+    def assert_fits_in_register(value: int):
+        if value >= Cpu.REGISTER_SIZE:
+            raise ValueError(f"Expected value that fits in register, but got: {value}")

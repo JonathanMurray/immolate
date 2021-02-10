@@ -3,6 +3,8 @@ from pytest import fail
 from immolate.cpu import Cpu
 from immolate.instructions.add import Add
 from immolate.instructions.add_register_and_number import AddRegisterAndNumber
+from immolate.instructions.pop import Pop
+from immolate.instructions.push import Push
 from immolate.instructions.put import Put
 
 
@@ -43,3 +45,15 @@ def test_put():
         fail("Should not allow putting a value that's larger than 255!")
     except ValueError:
         pass
+
+
+def test_push_pop():
+    cpu = Cpu([])
+
+    Push(42).execute(cpu)
+    Push(43).execute(cpu)
+    Pop(0).execute(cpu)
+    Pop(1).execute(cpu)
+
+    assert cpu.registers[0] == 43
+    assert cpu.registers[1] == 42

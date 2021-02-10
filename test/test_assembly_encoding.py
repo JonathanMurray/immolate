@@ -1,15 +1,17 @@
 from immolate.encoding.assembly import load_program_from_file, parse_assembly_line, parse_instruction_tokens
 from immolate.example_programs import FIBONACCI
-from immolate.instructions import Instruction
 from immolate.instructions.activate_screen import ActivateScreen
 from immolate.instructions.add import Add
 from immolate.instructions.add_register_and_number import AddRegisterAndNumber
 from immolate.instructions.breakpoint import Breakpoint
+from immolate.instructions.classes import INSTRUCTION_CLASSES
 from immolate.instructions.exit import Exit
 from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.pop import Pop
 from immolate.instructions.print_register import PrintRegister
+from immolate.instructions.push import Push
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
 from immolate.instructions.sleep import Sleep
@@ -27,11 +29,13 @@ EXAMPLE_INSTRUCTIONS = [
     (["FILL_SCREEN", "r1"], FillScreen(1)),
     (["REFRESH_SCREEN"], RefreshScreen()),
     (["BREAKPOINT"], Breakpoint()),
+    (["PUSH", "42"], Push(42)),
+    (["POP", "r1"], Pop(1)),
 ]
 
 
 def test_all_instructions_are_tested():
-    for cls in Instruction.__subclasses__():
+    for cls in INSTRUCTION_CLASSES:
         print(f"Asserting that instruction {cls} is tested.")
         assert any(type(instruction) == cls for (_, instruction) in EXAMPLE_INSTRUCTIONS)
 
