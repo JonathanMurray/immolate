@@ -1,7 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from contextlib import redirect_stdout
 from io import StringIO
-from typing import List
+from typing import List, Tuple
+
+from pygame.font import Font
 
 from immolate.memory import Memory
 
@@ -72,6 +74,8 @@ class PygameScreen(Screen):
                     surface.set_at((x, y), (intensity, intensity, intensity))
             self._sprites.append(surface)
         self._memory = memory
+        self._status_area_width = 200
+        self._font = None
 
     def activate(self):
         if self._active:
@@ -80,9 +84,11 @@ class PygameScreen(Screen):
         size = (resolution[0] * self._scaling, resolution[1] * self._scaling)
         self._surface = Surface(resolution)
         self._clock = Clock()
-        self._screen = pygame.display.set_mode(size)
+        self._screen = pygame.display.set_mode((size[0] + self._status_area_width, size[1]))
         pygame.display.set_caption(self._caption)
         self._active = True
+        pygame.font.init()
+        self._font = Font("Courier New Bold.ttf", 12)
 
     def run_one_frame(self):
         if not self._active:
@@ -102,6 +108,7 @@ class PygameScreen(Screen):
                     self._memory[address] = 0
         (addr_r, addr_g, addr_b) = MemoryAddresses.BACKGROUND_COLOR
         background_color = (self._memory[addr_r], self._memory[addr_g], self._memory[addr_b])
+        self._screen.fill((0, 0, 0))
         self._surface.fill(background_color)
 
         for i, sprite in enumerate(self._sprites):
@@ -109,5 +116,28 @@ class PygameScreen(Screen):
             sprite_position = (self._memory[addr_x], self._memory[addr_y])
             self._surface.blit(sprite, sprite_position)
         self._screen.blit(scale(self._surface), (0, 0))
+        self._render_debug_info()
         pygame.display.update()
         pygame.display.set_caption(f"{self._caption} ({round(self._clock.get_fps(), 1)})")
+
+    def _render_debug_info(self):
+        margin = 10
+        y = margin + 20
+        color = (255, 255, 255)
+
+        def render_text(text, position: Tuple[int, int]):
+            self._screen.blit(self._font.render(str(text), True, color), position)
+
+        x = self._screen.get_width() - self._status_area_width + margin
+        render_text("0-31", (x, margin))
+        for i in range(32):
+            render_text(self._memory[i], (x, y + i * 15))
+
+        x += 60
+        render_text("200-255", (x, margin))
+        for i in range(32):
+            render_text(self._memory[200 + i], (x, y + i * 15))
+
+        x += 30
+        for i in range(23):
+            render_text(self._memory[232 + i], (x, y + i * 15))
