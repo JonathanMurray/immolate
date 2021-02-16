@@ -30,7 +30,7 @@ def load_from_file(filename: str) -> Tuple[List[bytes], List[Instruction]]:
             sprite_paths = lines[1: lines.index(".program")]
             parent = Path(filename).parent
             sprites = [load_sprite_from_file(parent.joinpath(p)) for p in sprite_paths]
-            program = parse_program(lines[lines.index(".program")+1:])
+            program = parse_program(lines[lines.index(".program") + 1:])
         elif lines[0] == ".program" and ".sprites" not in lines:
             sprites = []
             program = parse_program(lines[1:])
@@ -55,11 +55,12 @@ def parse_instructions(lines: List[str], labels: Dict[str, Tuple[int, int]]):
     label_destinations = {label: instruction_index for (label, (instruction_index, _)) in labels.items()}
     for i, line in enumerate(lines):
         if i not in label_line_indices:
-            try:
-                instruction = parse_assembly_line(line.strip(), label_destinations)
-            except Exception as e:
-                raise Exception(f"Invalid syntax at line {i} ('{line.strip()}'): {e}") from e
-            program.append(instruction)
+            if line != "" and not line.startswith("#"):
+                try:
+                    instruction = parse_assembly_line(line, label_destinations)
+                except Exception as e:
+                    raise Exception(f"Invalid syntax at line {i} ('{line}'): {e}") from e
+                program.append(instruction)
     return program
 
 

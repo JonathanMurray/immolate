@@ -14,6 +14,7 @@ from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
 from immolate.instructions.sleep import Sleep
 from immolate.instructions.stack import Push, Pop
+from immolate.instructions.sub import Sub
 from immolate.instructions.subroutine import CallSubroutine, Return
 
 EXAMPLE_INSTRUCTIONS = [
@@ -34,6 +35,7 @@ EXAMPLE_INSTRUCTIONS = [
     (["RETURN"], Return()),
     (["STORE", "r1", "->", "[123]"], Store(1, 123)),
     (["LOAD", "r1", "<-", "[123]"], Load(1, 123)),
+    (["SUB", "r3", "<-", "r1", "r2"], Sub(1, 2, 3)),
 ]
 
 

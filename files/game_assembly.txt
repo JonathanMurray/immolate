@@ -1,0 +1,19 @@
+.sprites
+  spr_robot
+.program
+  ACTIVATE_SCREEN
+Loop:
+  REFRESH_SCREEN
+  LOAD r0 <- [200]     # Load player x
+  LOAD r1 <- [216]     # Load right key
+  ADD r0 <- r0 r1      # Move right
+  LOAD r2 <- [213]     # Load left key
+  SUB r0 <- r0 r2      # Move left
+  STORE r0 -> [200]    # Commit player x
+  LOAD r0 <- [201]     # Load player y
+  LOAD r1 <- [215]     # Load down key
+  ADD r0 <- r0 r1      # Move down
+  LOAD r2 <- [214]     # Load up key
+  SUB r0 <- r0 r2      # Move up
+  STORE r0 -> [201]    # Commit player y
+  JUMP Loop

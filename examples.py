@@ -12,7 +12,7 @@ from immolate.screen import PygameScreen
 def run_example(name: str, program_args: List[int]):
     sprites, program = EXAMPLE_PROGRAMS[name]
     memory = Memory(sprites)
-    screen = PygameScreen(memory)
+    screen = PygameScreen(memory, name)
     cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=screen, memory=memory)
     run_program(cpu)
 

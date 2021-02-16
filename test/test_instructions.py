@@ -6,6 +6,7 @@ from immolate.instructions.add_register_and_number import AddRegisterAndNumber
 from immolate.instructions.memory import Store, Load
 from immolate.instructions.put import Put
 from immolate.instructions.stack import Push, Pop
+from immolate.instructions.sub import Sub
 from immolate.instructions.subroutine import CallSubroutine, Return
 
 
@@ -84,3 +85,24 @@ def test_memory():
     Load(1, 123).execute(cpu)
 
     assert cpu.registers[1] == 42
+
+
+def test_subtract():
+    cpu = Cpu([])
+    cpu.registers[0] = 30
+    cpu.registers[1] = 20
+
+    Sub(0, 1, 2).execute(cpu)
+
+    assert cpu.registers[2] == 10
+
+
+def test_subtract_carry():
+    cpu = Cpu([])
+    cpu.registers[0] = 20
+    cpu.registers[1] = 30
+
+    Sub(0, 1, 2).execute(cpu)
+
+    assert cpu.registers[2] == 246
+    assert cpu.carry_flag

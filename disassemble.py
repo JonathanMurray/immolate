@@ -4,8 +4,9 @@ import sys
 from immolate.encoding import assembly, binary
 
 
-def assemble(executable_filename: str, assembly_filename: str):
-    program = binary.load_program_from_file(executable_filename)
+def disassemble(executable_filename: str, assembly_filename: str):
+    # TODO handle sprites correctly
+    program, sprites = binary.load_program_from_file(executable_filename)
     assembly.save_program_to_file(program, assembly_filename)
 
 
@@ -16,7 +17,7 @@ def main():
         return
     executable_filename = argv[1]
     assembly_filename = argv[2]
-    assemble(executable_filename, assembly_filename)
+    disassemble(executable_filename, assembly_filename)
 
 
 if __name__ == '__main__':

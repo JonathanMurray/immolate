@@ -38,6 +38,11 @@ class Cpu:
         self.registers[destination_register] = result % Cpu.WORD_SIZE
         self.carry_flag = result >= Cpu.WORD_SIZE
 
+    def subtract(self, a: int, b: int, destination_register: int):
+        result = a - b
+        self.registers[destination_register] = result % Cpu.WORD_SIZE
+        self.carry_flag = result < 0
+
     def do_output(self, output: int):
         print(str(output))
         self.output.append(str(output))

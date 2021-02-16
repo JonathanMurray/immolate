@@ -15,6 +15,12 @@ from pygame.time import Clock
 class MemoryAddresses:
     SPRITE_POSITIONS = [(200, 201), (202, 203), (204, 205), (206, 207), (208, 209)]
     BACKGROUND_COLOR = (210, 211, 212)
+    KEYS_STATUS = {
+        pygame.K_LEFT: 213,
+        pygame.K_UP: 214,
+        pygame.K_DOWN: 215,
+        pygame.K_RIGHT: 216,
+    }
 
 
 def scale(surface: Surface) -> Surface:
@@ -50,9 +56,9 @@ class FakeScreen(Screen):
 
 
 class PygameScreen(Screen):
-    def __init__(self, memory: Memory):
+    def __init__(self, memory: Memory, caption: str):
         self._scaling = 4
-        self._caption = "DEMO"
+        self._caption = caption
         self._surface = None
         self._clock = None
         self._screen = None
@@ -86,6 +92,14 @@ class PygameScreen(Screen):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.display.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key in MemoryAddresses.KEYS_STATUS:
+                    address = MemoryAddresses.KEYS_STATUS[event.key]
+                    self._memory[address] = 1
+            elif event.type == pygame.KEYUP:
+                if event.key in MemoryAddresses.KEYS_STATUS:
+                    address = MemoryAddresses.KEYS_STATUS[event.key]
+                    self._memory[address] = 0
         (addr_r, addr_g, addr_b) = MemoryAddresses.BACKGROUND_COLOR
         background_color = (self._memory[addr_r], self._memory[addr_g], self._memory[addr_b])
         self._surface.fill(background_color)
