@@ -4,13 +4,16 @@ from typing import List
 
 from immolate.cpu import Cpu
 from immolate.encoding import binary
+from immolate.memory import Memory
 from immolate.runner import run_program
 from immolate.screen import PygameScreen
 
 
 def run_program_from_file(filename: str, program_args: List[int]):
-    program = binary.load_program_from_file(filename)
-    cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=PygameScreen())
+    program, sprites = binary.load_program_from_file(filename)
+    memory = Memory(sprites=sprites)
+    screen = PygameScreen(memory)
+    cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=screen, memory=memory)
     run_program(cpu)
 
 

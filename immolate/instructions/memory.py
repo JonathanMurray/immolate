@@ -8,34 +8,33 @@ from immolate.instructions import Instruction, _assert_right_arrow, _parse_memor
 
 @dataclass
 class Store(Instruction):
-    value: int  # 8
+    source_register: int  # 2
     address: int  # 8
 
     def __post_init__(self):
-        Cpu.assert_fits_in_word(self.value)
         Cpu.assert_fits_in_word(self.address)
 
     def execute(self, cpu: Cpu):
-        cpu.memory[self.address] = self.value
+        cpu.memory[self.address] = cpu.registers[self.source_register]
 
     @staticmethod
     def decode(b: bytes):
-        value = b[0]
+        source_register = b[0]
         address = b[1]
-        return Store(value, address)
+        return Store(source_register, address)
 
     def __bytes__(self) -> bytes:
-        return bytes([self.value, self.address])
+        return bytes([self.source_register, self.address])
 
     @staticmethod
     def decode_assembly(tokens: List[str], labels: Dict[str, int]):
-        value = int(tokens[1])
+        source_register = _parse_register(tokens[1])
         _assert_right_arrow(tokens[2])
         address = _parse_memory_address(tokens[3])
-        return Store(value, address)
+        return Store(source_register, address)
 
     def __str__(self):
-        return f"{self.assembly_name()} {self.value} -> [{self.address}]"
+        return f"{self.assembly_name()} r{self.source_register} -> [{self.address}]"
 
     @staticmethod
     def assembly_name() -> str:

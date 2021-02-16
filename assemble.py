@@ -5,8 +5,8 @@ from immolate.encoding import assembly, binary
 
 
 def assemble(assembly_filename: str, executable_filename: str):
-    program = assembly.load_program_from_file(assembly_filename)
-    binary.save_program_to_file(program, executable_filename)
+    sprites, program = assembly.load_from_file(assembly_filename)
+    binary.save_program_to_file(program, sprites, executable_filename)
 
 
 def main():

@@ -19,11 +19,12 @@ def test_instruction_encoding():
 
 def test_program_encoding():
     with tempfile.TemporaryDirectory() as tempdir:
-        for i, program in enumerate(EXAMPLE_PROGRAMS.values()):
+        for i, (sprites, program) in enumerate(EXAMPLE_PROGRAMS.values()):
             print(f"Program: {program}")
             filepath = os.path.join(tempdir, f"test_program_{i}")
-            save_program_to_file(program, filepath)
+            save_program_to_file(program, sprites, filepath)
             print(f"Saved to {filepath}")
-            loaded_program = load_program_from_file(filepath)
+            loaded_program, loaded_sprites = load_program_from_file(filepath)
             print(f"Loaded program: {loaded_program}")
             assert program == loaded_program
+            assert sprites == loaded_sprites

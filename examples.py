@@ -4,13 +4,16 @@ from typing import List
 
 from immolate.cpu import Cpu
 from immolate.example_programs import EXAMPLE_PROGRAMS
+from immolate.memory import Memory
 from immolate.runner import run_program
 from immolate.screen import PygameScreen
 
 
 def run_example(name: str, program_args: List[int]):
-    program = EXAMPLE_PROGRAMS[name]
-    cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=PygameScreen())
+    sprites, program = EXAMPLE_PROGRAMS[name]
+    memory = Memory(sprites)
+    screen = PygameScreen(memory)
+    cpu = Cpu(program, args=program_args, allow_sleeps=True, screen=screen, memory=memory)
     run_program(cpu)
 
 

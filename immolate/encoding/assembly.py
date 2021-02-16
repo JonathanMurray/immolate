@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 
 from immolate.instructions import Instruction
@@ -14,14 +15,38 @@ def save_program_to_file(program: List[Instruction], filename: str):
     return program
 
 
-def load_program_from_file(filename: str) -> List[Instruction]:
+def load_sprite_from_file(filename: str) -> bytes:
+    with open(filename, "rb") as file:
+        return file.read()
+
+
+def load_from_file(filename: str) -> Tuple[List[bytes], List[Instruction]]:
     print(f"Loading program from {filename}")
     with open(filename, "r") as file:
         lines = file.readlines()
-        labels = parse_labels(lines)
-        program = parse_instructions(lines, labels)
+        lines = [line.strip() for line in lines]
+
+        if lines[0] == ".sprites" and ".program" in lines:
+            sprite_paths = lines[1: lines.index(".program")]
+            parent = Path(filename).parent
+            sprites = [load_sprite_from_file(parent.joinpath(p)) for p in sprite_paths]
+            program = parse_program(lines[lines.index(".program")+1:])
+        elif lines[0] == ".program" and ".sprites" not in lines:
+            sprites = []
+            program = parse_program(lines[1:])
+        elif ".sprites" not in lines and ".program" not in lines:
+            sprites = []
+            program = parse_program(lines)
+        else:
+            raise ValueError("Invalid layout of assembly file")
+
     print(f"Loaded program ({len(program)} instructions)")
-    return program
+    return sprites, program
+
+
+def parse_program(lines: List[str]) -> List[Instruction]:
+    labels = parse_labels(lines)
+    return parse_instructions(lines, labels)
 
 
 def parse_instructions(lines: List[str], labels: Dict[str, Tuple[int, int]]):

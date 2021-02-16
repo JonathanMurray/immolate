@@ -1,11 +1,26 @@
-  ACTIVATE_SCREEN         
-  PUT r1 <- 255
-LOOP:
-  PRINT r0
-  FILL_SCREEN r0
+.sprites
+  spr_robot
+  spr_hero
+.program
+  ACTIVATE_SCREEN
+  PUT r0 <- 100
+  PUT r1 <- 100
+  PUT r2 <- 200
+  CALL_SUBROUTINE DrawBackground
+  PUT r0 <- 10
+  STORE r0 -> [200]    # character X
+  PUT r1 <- 100
+Loop:
+  JUMP_EQ Exit <- r0 r1
+  STORE r0 -> [200]    # character X
+  CALL_SUBROUTINE DrawBackground
   REFRESH_SCREEN
   ADD_NUM r0 <- r0 1
-  JUMP_EQ EXIT <- r0 r1
-  JUMP LOOP
-EXIT:
+  JUMP Loop
+Exit:
   EXIT 0
+DrawBackground:
+  STORE r0 -> [210]    # background R
+  STORE r1 -> [211]    # background G
+  STORE r2 -> [212]    # background B
+  RETURN

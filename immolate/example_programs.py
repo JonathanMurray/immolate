@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from immolate.instructions import Instruction
 from immolate.instructions.activate_screen import ActivateScreen
@@ -6,9 +6,9 @@ from immolate.instructions.add import Add
 from immolate.instructions.add_register_and_number import AddRegisterAndNumber
 from immolate.instructions.breakpoint import Breakpoint
 from immolate.instructions.exit import Exit
-from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.memory import Store
 from immolate.instructions.print_register import PrintRegister
 from immolate.instructions.put import Put
 from immolate.instructions.refresh_screen import RefreshScreen
@@ -54,10 +54,13 @@ ADD_TWO_ARGS = [
 GRAPHICS = [
     ActivateScreen(),  # Show graphics
     Put(255, 1),  # Stop when we've reached the color value 255
-    FillScreen(0),  # Fill screen
+    Store(0, 210),  # Fill screen
     RefreshScreen(),  # Refresh screen
     AddRegisterAndNumber(1, 0, 0),  # Increment color value
-    JumpIfEqual(0, 1, 7),  # Exit if we've reached 255
+    Store(0, 200),
+    Store(0, 201),
+    Store(0, 202),
+    JumpIfEqual(0, 1, 10),  # Exit if we've reached 255
     Jump(2),  # Otherwise, repeat the loop
     Exit(0)  # Exit
 ]
@@ -84,11 +87,11 @@ SUBROUTINE = [
     Exit(0)
 ]
 
-EXAMPLE_PROGRAMS: Dict[str, List[Instruction]] = {
-    "fib": FIBONACCI,
-    "1337": PRINT_1337,
-    "add": ADD_TWO_ARGS,
-    "graphics": GRAPHICS,
-    "breakpoint": BREAKPOINT,
-    "subroutine": SUBROUTINE,
+EXAMPLE_PROGRAMS: Dict[str, Tuple[List[bytes], List[Instruction]]] = {
+    "fib": ([], FIBONACCI),
+    "1337": ([], PRINT_1337),
+    "add": ([], ADD_TWO_ARGS),
+    "graphics": ([], GRAPHICS),
+    "breakpoint": ([], BREAKPOINT),
+    "subroutine": ([], SUBROUTINE),
 }

@@ -1,6 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from contextlib import redirect_stdout
 from io import StringIO
+from typing import List
+
+from immolate.memory import Memory
 
 with redirect_stdout(StringIO()):
     # Pygame logs a message upon being imported, but we want to keep the console clean in this project.
@@ -9,13 +12,17 @@ from pygame import Surface
 from pygame.time import Clock
 
 
+class MemoryAddresses:
+    SPRITE_POSITIONS = [(200, 201), (202, 203), (204, 205), (206, 207), (208, 209)]
+    BACKGROUND_COLOR = (210, 211, 212)
+
+
 def scale(surface: Surface) -> Surface:
     from pygame.transform import scale2x
     return scale2x(scale2x(surface))
 
 
 class Screen(metaclass=ABCMeta):
-    color: int
 
     @abstractmethod
     def activate(self):
@@ -28,8 +35,9 @@ class Screen(metaclass=ABCMeta):
 
 class FakeScreen(Screen):
 
-    def __init__(self):
+    def __init__(self, memory: Memory):
         self._active = False
+        self.memory = memory
 
     def activate(self):
         if self._active:
@@ -42,14 +50,22 @@ class FakeScreen(Screen):
 
 
 class PygameScreen(Screen):
-    def __init__(self):
-        self.color = 0
+    def __init__(self, memory: Memory):
         self._scaling = 4
         self._caption = "DEMO"
         self._surface = None
         self._clock = None
         self._screen = None
         self._active = False
+        self._sprites: List[Surface] = []
+        for sprite in memory.sprites:
+            surface = Surface((16, 16))
+            for y in range(16):
+                for x in range(16):
+                    intensity = sprite[x + y * 16]
+                    surface.set_at((x, y), (intensity, intensity, intensity))
+            self._sprites.append(surface)
+        self._memory = memory
 
     def activate(self):
         if self._active:
@@ -70,7 +86,14 @@ class PygameScreen(Screen):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.display.quit()
-        self._surface.fill((self.color, self.color, self.color))
+        (addr_r, addr_g, addr_b) = MemoryAddresses.BACKGROUND_COLOR
+        background_color = (self._memory[addr_r], self._memory[addr_g], self._memory[addr_b])
+        self._surface.fill(background_color)
+
+        for i, sprite in enumerate(self._sprites):
+            (addr_x, addr_y) = MemoryAddresses.SPRITE_POSITIONS[i]
+            sprite_position = (self._memory[addr_x], self._memory[addr_y])
+            self._surface.blit(sprite, sprite_position)
         self._screen.blit(scale(self._surface), (0, 0))
         pygame.display.update()
         pygame.display.set_caption(f"{self._caption} ({round(self._clock.get_fps(), 1)})")

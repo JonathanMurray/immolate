@@ -1,5 +1,6 @@
 from immolate.cpu import Cpu
 from immolate.example_programs import FIBONACCI, PRINT_1337, ADD_TWO_ARGS, GRAPHICS, BREAKPOINT, SUBROUTINE
+from immolate.memory import Memory
 from immolate.screen import FakeScreen
 
 
@@ -23,11 +24,12 @@ def test_add_two_args():
 
 
 def test_graphics():
-    screen = FakeScreen()
-    cpu = Cpu(GRAPHICS, screen=screen)
+    memory = Memory()
+    screen = FakeScreen(memory)
+    cpu = Cpu(GRAPHICS, screen=screen, memory=memory)
     cpu.run_until_exit_or_halt()
     assert cpu.output == []
-    assert screen.color == 254
+    assert memory[210] == 254
 
 
 def test_breakpoint():

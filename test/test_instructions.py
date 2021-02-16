@@ -76,7 +76,8 @@ def test_subroutine_call_and_return():
 def test_memory():
     cpu = Cpu([])
 
-    Store(42, 123).execute(cpu)
+    cpu.registers[1] = 42
+    Store(1, 123).execute(cpu)
 
     assert cpu.memory[123] == 42
 

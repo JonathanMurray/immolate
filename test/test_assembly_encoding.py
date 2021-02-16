@@ -1,4 +1,4 @@
-from immolate.encoding.assembly import load_program_from_file, parse_assembly_line, parse_instruction_tokens
+from immolate.encoding.assembly import load_from_file, parse_assembly_line, parse_instruction_tokens
 from immolate.example_programs import FIBONACCI
 from immolate.instructions.activate_screen import ActivateScreen
 from immolate.instructions.add import Add
@@ -6,7 +6,6 @@ from immolate.instructions.add_register_and_number import AddRegisterAndNumber
 from immolate.instructions.breakpoint import Breakpoint
 from immolate.instructions.classes import INSTRUCTION_CLASSES
 from immolate.instructions.exit import Exit
-from immolate.instructions.fill_screen import FillScreen
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
 from immolate.instructions.memory import Store, Load
@@ -27,14 +26,13 @@ EXAMPLE_INSTRUCTIONS = [
     (["PRINT", "r1"], PrintRegister(1)),
     (["SLEEP", "1000"], Sleep(1000)),
     (["ACTIVATE_SCREEN"], ActivateScreen()),
-    (["FILL_SCREEN", "r1"], FillScreen(1)),
     (["REFRESH_SCREEN"], RefreshScreen()),
     (["BREAKPOINT"], Breakpoint()),
     (["PUSH", "42"], Push(42)),
     (["POP", "r1"], Pop(1)),
     (["CALL_SUBROUTINE", "42"], CallSubroutine(42)),
     (["RETURN"], Return()),
-    (["STORE", "42", "->", "[123]"], Store(42, 123)),
+    (["STORE", "r1", "->", "[123]"], Store(1, 123)),
     (["LOAD", "r1", "<-", "[123]"], Load(1, 123)),
 ]
 
@@ -56,9 +54,18 @@ def test_parse_jump_instructions_with_labels():
     assert parse_instruction_tokens(["JUMP_EQ", "A", "<-", "r1", "r2"], {"A": 42, "B": 999}) == JumpIfEqual(1, 2, 42)
 
 
-def test_fibonacci_example():
-    program = load_program_from_file("files/fibonacci_assembly.txt")
+def test_fibonacci_program():
+    sprite_paths, program = load_from_file("files/fibonacci_assembly.txt")
+    assert sprite_paths == []
     assert program == FIBONACCI
+
+
+def test_graphics_program():
+    sprite_paths, program = load_from_file("files/graphics_assembly.txt")
+    assert len(sprite_paths) == 2
+    assert type(sprite_paths[0]) == bytes
+    assert type(sprite_paths[1]) == bytes
+    assert len(program) > 0
 
 
 def test_parse_assembly_line():

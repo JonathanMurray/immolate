@@ -2,6 +2,7 @@ from time import sleep
 from typing import List
 
 from immolate.instructions import Instruction
+from immolate.memory import Memory
 from immolate.screen import Screen, FakeScreen
 
 
@@ -9,12 +10,13 @@ class Cpu:
     WORD_SIZE = 256  # 8-bit
 
     def __init__(self, program: List[Instruction], args: List[int] = None, debug: bool = False,
-        allow_sleeps: bool = False, screen: Screen = None):
+        allow_sleeps: bool = False, screen: Screen = None, memory: Memory = None):
         if len(program) >= Cpu.WORD_SIZE:
             raise ValueError(f"Program too large for address space. Len={program}")
         args = args or []
         if len(args) > 4:
             raise ValueError(f"Max 4 args are allowed. Got {len(args)}: {args}")
+        self.memory = memory or Memory()
 
         self.registers = [0, 0, 0, 0]
         for i in range(len(args)):
@@ -27,10 +29,9 @@ class Cpu:
         self.exit_code = None
         self._debug = debug
         self._allow_sleeps = allow_sleeps
-        self._screen = screen or FakeScreen()
+        self._screen = screen or FakeScreen(memory)
         self.halted = False
         self.stack = []
-        self.memory = [0] * Cpu.WORD_SIZE
 
     def add(self, a: int, b: int, destination_register: int):
         result = a + b
@@ -71,9 +72,6 @@ class Cpu:
 
     def refresh_screen(self):
         self._screen.run_one_frame()
-
-    def fill_screen(self, color: int):
-        self._screen.color = color
 
     def dump(self) -> str:
         return (
