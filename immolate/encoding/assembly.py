@@ -68,10 +68,10 @@ def parse_labels(lines: List[str]) -> Dict[str, Tuple[int, int]]:
     labels = {}
     instruction_index = 0
     for line_index, line in enumerate(lines):
-        label = try_parse_label(line.strip())
+        label = try_parse_label(line)
         if label:
             labels[label] = (instruction_index, line_index)
-        else:
+        elif line != "" and not line.startswith("#"):
             instruction_index += 1
     return labels
 

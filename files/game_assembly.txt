@@ -1,9 +1,35 @@
 .sprites
   spr_robot
 .program
+
+Start:
   ACTIVATE_SCREEN
+  PUT r0 <- 100
+  STORE r0 -> [212]    # background B
+
 Loop:
+  PRINT r0
   REFRESH_SCREEN
+  CALL_SUBROUTINE Gravity
+  JUMP Loop
+
+Gravity:
+  LOAD r0 <- [0]             # Load dy
+  LOAD r2 <- [201]           # Load y
+  ADD_NUM r0 <- r0 1         # dy += 1
+  ADD r2 <- r2 r0            # Update y
+  PUT r3 <- 100
+  JUMP_GT OnGround <- r2 r3
+  STORE r0 -> [0]            # Store dy
+  STORE r2 -> [201]          # Store y
+  RETURN
+OnGround:
+  PUT r0 <- 0                # dy = 0
+  STORE r0 -> [0]            # Store dy
+  STORE r3 -> [201]          # Store y = 100
+  RETURN
+
+PlayerMovement:
   LOAD r0 <- [200]     # Load player x
   LOAD r1 <- [216]     # Load right key
   ADD r0 <- r0 r1      # Move right
@@ -16,4 +42,4 @@ Loop:
   LOAD r2 <- [214]     # Load up key
   SUB r0 <- r0 r2      # Move up
   STORE r0 -> [201]    # Commit player y
-  JUMP Loop
+  RETURN

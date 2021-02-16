@@ -8,6 +8,7 @@ from immolate.instructions.classes import INSTRUCTION_CLASSES
 from immolate.instructions.exit import Exit
 from immolate.instructions.jump import Jump
 from immolate.instructions.jump_if_equal import JumpIfEqual
+from immolate.instructions.jump_if_greater_than import JumpIfGreaterThan
 from immolate.instructions.memory import Store, Load
 from immolate.instructions.print_register import PrintRegister
 from immolate.instructions.put import Put
@@ -36,6 +37,7 @@ EXAMPLE_INSTRUCTIONS = [
     (["STORE", "r1", "->", "[123]"], Store(1, 123)),
     (["LOAD", "r1", "<-", "[123]"], Load(1, 123)),
     (["SUB", "r3", "<-", "r1", "r2"], Sub(1, 2, 3)),
+    (["JUMP_GT", "42", "<-", "r1", "r2"], JumpIfGreaterThan(1, 2, 42)),
 ]
 
 
