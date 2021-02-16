@@ -4,13 +4,17 @@
 
 Start:
   ACTIVATE_SCREEN
-  PUT r0 <- 100
+  PUT r0 <- 150
   STORE r0 -> [212]    # background B
+  PUT r0 <- 20
+  STORE r0 -> [200]    # Set player start y
+  PUT r0 <- 70
+  STORE r0 -> [201]    # Set player start y
 
 Loop:
-  PRINT r0
   REFRESH_SCREEN
   CALL_SUBROUTINE Gravity
+  CALL_SUBROUTINE PlayerMovement
   JUMP Loop
 
 Gravity:
@@ -18,7 +22,7 @@ Gravity:
   LOAD r2 <- [201]           # Load y
   ADD_NUM r0 <- r0 1         # dy += 1
   ADD r2 <- r2 r0            # Update y
-  PUT r3 <- 100
+  PUT r3 <- 112
   JUMP_GT OnGround <- r2 r3
   STORE r0 -> [0]            # Store dy
   STORE r2 -> [201]          # Store y
@@ -26,20 +30,26 @@ Gravity:
 OnGround:
   PUT r0 <- 0                # dy = 0
   STORE r0 -> [0]            # Store dy
-  STORE r3 -> [201]          # Store y = 100
+  STORE r3 -> [201]          # Store y = 112
   RETURN
 
 PlayerMovement:
-  LOAD r0 <- [200]     # Load player x
-  LOAD r1 <- [216]     # Load right key
-  ADD r0 <- r0 r1      # Move right
-  LOAD r2 <- [213]     # Load left key
-  SUB r0 <- r0 r2      # Move left
-  STORE r0 -> [200]    # Commit player x
-  LOAD r0 <- [201]     # Load player y
-  LOAD r1 <- [215]     # Load down key
-  ADD r0 <- r0 r1      # Move down
-  LOAD r2 <- [214]     # Load up key
-  SUB r0 <- r0 r2      # Move up
-  STORE r0 -> [201]    # Commit player y
+  LOAD r0 <- [200]             # Load player x
+  LOAD r1 <- [216]             # Load right key
+  ADD r0 <- r0 r1              # Move right
+  LOAD r2 <- [213]             # Load left key
+  SUB r0 <- r0 r2              # Move left
+  STORE r0 -> [200]            # Commit player x
+  LOAD r0 <- [201]             # Load player y
+  PUT r1 <- 111
+  JUMP_GT CheckJump <- r0 r1   # Try jump if on ground
+  RETURN
+CheckJump:
+  LOAD r2 <- [214]             # Load up key
+  PUT r1 <- 1
+  JUMP_EQ PerformJump <- r1 r2
+  RETURN
+PerformJump:
+  PUT r0 <- -7                # Set negative dy
+  STORE r0 -> [0]              # Store dy
   RETURN
